@@ -1,0 +1,35 @@
+name: mailmind_app_v2
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # HTTP client pour Ollama API
+  http: ^1.1.0
+
+  # Reconnaissance vocale (Speech-to-Text)
+  speech_to_text: ^6.6.2
+
+  # Synthèse vocale (Text-to-Speech)
+  flutter_tts: ^4.2.0
+
+  # Gestion des permissions
+  permission_handler: ^11.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
