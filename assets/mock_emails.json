@@ -1,0 +1,68 @@
+[
+  {
+    "id": "1",
+    "from": "marie.dubois@entreprise.fr",
+    "fromName": "Marie Dubois",
+    "subject": "Réunion d'équipe jeudi",
+    "body": "Bonjour, je vous confirme notre réunion d'équipe ce jeudi 18 janvier à 14h30 en salle de conférence. Nous aborderons les objectifs du trimestre et la nouvelle stratégie marketing. Merci de confirmer votre présence.",
+    "receivedDate": "2025-01-15T09:30:00Z",
+    "isRead": false,
+    "hasAttachments": false,
+    "attachments": []
+  },
+  {
+    "id": "2",
+    "from": "notifications@banque.com",
+    "fromName": "Ma Banque",
+    "subject": "Votre relevé mensuel est disponible",
+    "body": "Bonjour, votre relevé de compte pour le mois de décembre 2024 est maintenant disponible dans votre espace client. Solde au 31/12: 2 450,00 EUR. Pour toute question, contactez votre conseiller.",
+    "receivedDate": "2025-01-14T08:15:00Z",
+    "isRead": true,
+    "hasAttachments": true,
+    "attachments": ["releve_decembre_2024.pdf"]
+  },
+  {
+    "id": "3",
+    "from": "support@cloudservice.com",
+    "fromName": "Cloud Service Support",
+    "subject": "Votre abonnement expire dans 7 jours",
+    "body": "Hello, your Cloud Storage Pro subscription will expire on January 22, 2025. To continue enjoying 2TB of storage and premium features, please renew your subscription. Special offer: 20% off if you renew before expiration!",
+    "receivedDate": "2025-01-15T14:22:00Z",
+    "isRead": false,
+    "hasAttachments": false,
+    "attachments": []
+  },
+  {
+    "id": "4",
+    "from": "lucas.martin@tech-corp.com",
+    "fromName": "Lucas Martin",
+    "subject": "RE: Proposition de collaboration",
+    "body": "Bonjour, merci pour votre proposition de collaboration sur le projet IA. Cela m'intéresse beaucoup! Seriez-vous disponible pour un appel la semaine prochaine afin d'en discuter plus en détail? Je suis libre mardi et mercredi après-midi. Cordialement, Lucas",
+    "receivedDate": "2025-01-13T16:45:00Z",
+    "isRead": true,
+    "hasAttachments": false,
+    "attachments": []
+  },
+  {
+    "id": "5",
+    "from": "newsletter@techblog.com",
+    "fromName": "TechBlog Newsletter",
+    "subject": "Les 10 tendances IA de 2025",
+    "body": "Découvrez notre sélection des 10 tendances majeures en intelligence artificielle pour 2025: agents autonomes, LLMs multimodaux, IA générative pour le code, etc. Article complet sur notre blog avec analyses et prédictions d'experts du secteur.",
+    "receivedDate": "2025-01-12T07:00:00Z",
+    "isRead": false,
+    "hasAttachments": false,
+    "attachments": []
+  },
+  {
+    "id": "6",
+    "from": "rh@monentreprise.fr",
+    "fromName": "Service RH",
+    "subject": "Validation de vos congés",
+    "body": "Bonjour, vos congés du 5 au 16 février 2025 ont été validés par votre manager. Vous recevrez une confirmation officielle par courrier. Pensez à transmettre vos dossiers en cours à votre collègue avant votre départ. Bonnes vacances anticipées!",
+    "receivedDate": "2025-01-10T11:20:00Z",
+    "isRead": true,
+    "hasAttachments": false,
+    "attachments": []
+  }
+]

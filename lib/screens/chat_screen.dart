@@ -7,6 +7,7 @@ import '../services/voice_service.dart';
 import '../services/tts_service.dart';
 import '../core/llm_backend.dart';
 import '../services/settings_service.dart';
+import '../services/email_service.dart';
 import 'language_settings_screen.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final VoiceService _voiceService = VoiceService();
   final TtsService _ttsService = TtsService();
   final SettingsService _settingsService = SettingsService();
+  final EmailService _emailService = EmailService();
 
   bool _isTyping = false;
   bool _isListening = false;
@@ -34,8 +36,22 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     if (!const bool.fromEnvironment('flutter.tests', defaultValue: false)) {
-      _initializeLLM();
-      _initializeVoiceServices();
+      _initializeServices();
+    }
+  }
+
+  Future<void> _initializeServices() async {
+    await _initializeEmails();
+    await _initializeLLM();
+    await _initializeVoiceServices();
+  }
+
+  Future<void> _initializeEmails() async {
+    try {
+      await _emailService.loadEmails();
+      print('✅ Emails chargés: ${_emailService.getTotalCount()} total, ${_emailService.getUnreadCount()} non lus');
+    } catch (e) {
+      print('❌ Erreur chargement emails: $e');
     }
   }
 

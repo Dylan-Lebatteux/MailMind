@@ -4,6 +4,7 @@ import '../core/llm_backend.dart';
 import '../services/backends/ollama_backend.dart';
 import '../models/conversation_context.dart';
 import '../models/message.dart';
+import 'email_service.dart';
 
 /// Service principal de gestion LLM avec architecture multi-backend
 class LLMService {
@@ -89,8 +90,18 @@ class LLMService {
         context = _currentContext;
       }
 
+      // Injecter le contexte des emails dans le message utilisateur
+      final emailService = EmailService();
+      String enrichedMessage = userMessage;
+
+      // Si la question concerne les emails, ajouter le contexte
+      if (_isEmailRelatedQuery(userMessage)) {
+        enrichedMessage = _buildEmailQuery(userMessage, emailService);
+        print('📧 Contexte emails ajouté à la requête');
+      }
+
       // Générer avec le backend actuel
-      final response = await _currentBackend!.generateResponse(userMessage, context);
+      final response = await _currentBackend!.generateResponse(enrichedMessage, context);
 
       // Mettre à jour le contexte de conversation
       _updateConversationContext(userMessage, response);
@@ -101,6 +112,93 @@ class LLMService {
       print('❌ Erreur génération: $e');
       throw Exception('Erreur de génération: $e');
     }
+  }
+
+  /// Construit une requête intelligente pour les emails
+  String _buildEmailQuery(String userMessage, EmailService emailService) {
+    final lowerQuery = userMessage.toLowerCase();
+
+    // Question sur le nombre total
+    if (lowerQuery.contains('combien')) {
+      // Détecter "non lus" ou "pas lus" ou "ne sont pas lus"
+      if (lowerQuery.contains('non lu') ||
+          lowerQuery.contains('pas lu') ||
+          lowerQuery.contains('pas encore lu') ||
+          lowerQuery.contains('ne sont pas') ||
+          lowerQuery.contains('non-lu')) {
+        final count = emailService.getUnreadCount();
+        return 'Réponds EXACTEMENT en une phrase: Tu as $count emails non lus.';
+      } else if (lowerQuery.contains('email') || lowerQuery.contains('mail')) {
+        final count = emailService.getTotalCount();
+        return 'Réponds EXACTEMENT en une phrase: Tu as $count emails au total.';
+      }
+    }
+
+    // Question sur le dernier email (détection améliorée)
+    final isAskingLatest = lowerQuery.contains('dernier') ||
+                          lowerQuery.contains('récent') ||
+                          lowerQuery.contains('dernier email') ||
+                          lowerQuery.contains('derniere') ||
+                          (lowerQuery.contains('le') && lowerQuery.contains('reçu') && lowerQuery.contains('email'));
+
+    if (isAskingLatest) {
+      final latest = emailService.getLatestEmail();
+      if (latest != null) {
+        return '''Tu es un assistant vocal. Lis cet email à voix haute:
+
+De: ${latest.fromName}
+Sujet: ${latest.subject}
+Contenu: ${latest.body}
+
+Reformule naturellement ce message en 2-3 phrases. STOP immédiatement après. NE COMMENTE PAS ton travail. NE DIS RIEN d'autre après avoir lu le message.''';
+      }
+    }
+
+    // Question sur un email spécifique (recherche par mot-clé)
+    final keywords = ['banque', 'cloud', 'réunion', 'marie', 'lucas', 'rh', 'newsletter', 'congé', 'abonnement', 'collaboration'];
+    for (var keyword in keywords) {
+      if (lowerQuery.contains(keyword)) {
+        final results = emailService.searchEmails(keyword);
+        if (results.isNotEmpty) {
+          final email = results.first;
+          return '''Tu es un assistant vocal. Lis cet email à voix haute:
+
+De: ${email.fromName}
+Sujet: ${email.subject}
+Contenu: ${email.body}
+
+Reformule naturellement ce message en 2-3 phrases. STOP immédiatement après. NE COMMENTE PAS ton travail. NE DIS RIEN d'autre après avoir lu le message.''';
+        }
+      }
+    }
+
+    // Liste des non lus
+    if (lowerQuery.contains('non lu')) {
+      final unread = emailService.getUnreadEmails();
+      if (unread.isEmpty) {
+        return 'Réponds: Tu n\'as pas d\'emails non lus.';
+      }
+      final list = unread.map((e) => '${e.fromName}: ${e.subject}').join(', ');
+      return 'Réponds: Tu as ${unread.length} emails non lus de: $list';
+    }
+
+    // Par défaut: réponse très stricte
+    return 'Réponds en UNE phrase courte: Je ne peux pas répondre à cette question sur les emails.';
+  }
+
+  /// Détecte si la question concerne les emails
+  bool _isEmailRelatedQuery(String query) {
+    final lowerQuery = query.toLowerCase();
+    final emailKeywords = [
+      'email', 'mail', 'message', 'courrier',
+      'boîte', 'boite', 'réception', 'reception',
+      'combien', 'dernier', 'derniere', 'lu', 'non lu',
+      'reçu', 'recu', 'envoyé', 'envoye',
+      'marie', 'lucas', 'banque', 'cloud', 'rh', 'newsletter',
+      'réunion', 'reunion', 'abonnement', 'congé', 'conge'
+    ];
+
+    return emailKeywords.any((keyword) => lowerQuery.contains(keyword));
   }
 
   /// Générer une réponse en streaming

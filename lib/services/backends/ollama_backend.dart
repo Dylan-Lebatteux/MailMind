@@ -18,9 +18,9 @@ class OllamaBackend implements LLMBackend {
   final Random _random = Random();
 
   // Configuration par défaut
-  static const String defaultModel = 'qwen2.5:1.5b';
+  static const String defaultModel = 'qwen2.5:3b';
   static const String defaultServerUrl = 'http://localhost:11434';
-  static const String systemPrompt = """Tu es MailMind, un assistant conversationnel intelligent et amical. Tu discutes naturellement en français et anglais. Tu es spécialisé dans l'aide à la gestion d'emails et la productivité, mais tu peux discuter de tous les sujets. Réponds de manière naturelle, concise et utile.""";
+  static const String systemPrompt = """Tu es MailMind, un assistant conversationnel intelligent et amical. Tu discutes naturellement en français et anglais. Tu es spécialisé dans l'aide à la gestion d'emails et la productivité. Réponds de manière précise, concise et directe. Suis exactement les instructions données sans ajouter d'informations non demandées.""";
 
   OllamaBackend([LLMBackendConfig? config]) {
     _config = config ?? LLMBackendConfig.ollama();
